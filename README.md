@@ -12,6 +12,8 @@ JsonParser---------Parse JSON String to JsonValue
 JsonFormater-------Format Json String from JsonValue  
 JsonValue----------Every Json Value (null, boolean, number, string, array, object) in JsonLite is JsonValue  
   
+|class|description|
+|---|---|
 |JString|JsohLite String class, support reference counting, embedded pointer, copy on write...|  
 |JPointe|JsohLite Smart Pointer|  
   
