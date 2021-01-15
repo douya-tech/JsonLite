@@ -672,13 +672,13 @@ public:
 	virtual JString ToString() const
 	{
 		JString result("[");
-		for (UINT i = 0, l = m_Items.size(); i < l; ++i)
+		for (UINT i = 0, l = m_Items.size(); i < l;)
 		{
-			if (i > 0)
+			result += m_Items[i]->ToString();
+			if (++i < l)
 			{
 				result += ", ";
 			}
-			result += m_Items[i]->ToString();
 		}
 		result += "]";
 		return result;
@@ -737,15 +737,15 @@ public:
 	virtual JString ToString() const
 	{
 		JString result("{", 256);
-		for (UINT i = 0, l = m_Names.size(); i < l; ++i)
+		for (UINT i = 0, l = m_Names.size(); i < l;)
 		{
-			if (i > 0)
-			{
-				result += ", ";
-			}
 			JString name = m_Names[i];
 			JString item = m_Items.find(name)->second->ToString();
 			result += JString().Format("\"%s\": %s", name, item);
+			if (++i < l)
+			{
+				result += ", ";
+			}
 		}
 		result += "}";
 		return result;
@@ -931,12 +931,13 @@ public:
 	}
 
 public:
-	JPointer<IJsonValue> operator->()
+	JPointer<IJsonValue> operator->() const
 	{
 		return m_pValue;
 	}
 
-	operator bool(){
+	operator bool() const
+	{
 		return m_pValue->GetBoolean();
 	}
 
@@ -1042,18 +1043,6 @@ public:
 			return p->GeDouble();
 		}
 		return 0.0;
-	}
-
-	//
-
-	JString GetType() const
-	{
-		return m_pValue->GetType();
-	}
-
-	JString GetString() const
-	{
-		return m_pValue->GetString();
 	}
 
 private:
@@ -1316,7 +1305,7 @@ public:
 	{
 		JString result;
 
-		JString type = Json.GetType();
+		JString type = Json->GetType();
 		if (type.Equals("object"))
 		{
 			result = JsonFormater().FormatObject(Json, 0, Indent);
@@ -1360,10 +1349,10 @@ private:
 			result += ' ';
 			//string end
 
-			JString type = Json[i].GetType();
+			JString type = Json[i]->GetType();
 			if (type.Equals("string"))
 			{
-				result += FormatString(Json[i].GetString());
+				result += FormatString(Json[i]->GetString());
 			}
 			else if (type.Equals("object"))
 			{
@@ -1383,7 +1372,7 @@ private:
 			}
 			else
 			{
-				result += Json[i].GetString();
+				result += Json[i]->GetString();
 			}
 			if (++i < l) // Last pair
 			{
@@ -1421,13 +1410,13 @@ private:
 		// first line end
 		for (int i = 0, l = Json.GetLength(); i < l;)
 		{
-			JString type = Json[i].GetType();
+			JString type = Json[i]->GetType();
 			if (type.Equals("string"))
 			{
 				// begin of the line
 				result += JString(' ', Indent * (Level + 1));
 
-				result += FormatString(Json[i].GetString());
+				result += FormatString(Json[i]->GetString());
 			}
 			else if (type.Equals("object"))
 			{
@@ -1442,7 +1431,7 @@ private:
 				// begin of the line
 				result += JString(' ', Indent * (Level + 1));
 
-				result += Json[i].GetString();
+				result += Json[i]->GetString();
 			}
 			if (++i < l)  //Last Value
 			{
@@ -1469,7 +1458,7 @@ private:
 		JString result;
 
 		result += '\"';
-		if (pString!= NULL)
+		if (pString != NULL)
 		{
 			while (*pString != 0)
 			{
