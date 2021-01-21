@@ -118,13 +118,16 @@ void TestParse()
 	builder.Set("string", "abc");
 	builder.Set("integer", 123);
 	builder.Set("double", 3.14);
+	builder.SetBool("boolean", true);
+	builder.SetNull("null");
 	builder.Set("array", JsonArrayBuilder()
 		.Add("item1")
 		.Add("item2"));
 	builder.Set("object", JsonObjectBuilder()
 		.Set("name1", "value1")
 		.Set("name2", "value2"));
-	//Print(builder.Build());
+	
+	Print(builder.Build());
 
 	JsonValue json = JsonParser::Parse(builder.Build());
 	for (UINT i = 0, l = json.GetLength(); i < l; ++i)
@@ -135,7 +138,7 @@ void TestParse()
 		Print("Name=[%-7s] Type=[%-6s] ValueOfString=\"%s\"", name, type, value);
 	}
 
-	//Print(JsonFormater::Format(json, 4));
+	Print(JsonFormater::Format(json, 4));
 }
 
 int _tmain(int argc, _TCHAR* argv[])
