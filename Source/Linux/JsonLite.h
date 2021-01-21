@@ -9,18 +9,15 @@
 #ifndef JSONLITE_H
 #define JSONLITE_H
 
-//#include <string.h>
-//#include <stdio.h>
-//#include <ctype.h>
-//#include <stdarg.h>
-
-//#ifndef PLATFORM
-//typedef unsigned char BYTE
-//typedef unsigned int  UINT
-//#endif
-
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+// #include <ctype.h>
 #include <vector>
 #include <map>
+
+typedef unsigned char BYTE;
+typedef unsigned int  UINT;
 
 //----------------------------------------------------------------------------------------------------------------------
 // JString
@@ -271,7 +268,7 @@ public:
 		{
 			*this = JString(m_pBuffer, length);
 		}
-
+		
 		va_start(argptr, Format);
 
 		vsprintf(m_pBuffer + GetLength(), Format, argptr);
@@ -371,7 +368,7 @@ inline bool operator < (const JString& String1, const JString& String2)
 inline JString operator + (const JString& String1, const JString& String2)
 {
 	JString result(strlen(String1) + strlen(String2));
-	sprintf(result, "%s%s", String1, String2);
+	sprintf(result.GetString(), "%s%s", String1.GetString(), String2.GetString());
 	return result;
 }
 
@@ -454,17 +451,6 @@ public:
 private:
 	UINT* m_pCounter;
 	T*    m_pPointer;
-};
-
-//----------------------------------------------------------------------------------------------------------------------
-// JsonExcption
-
-class JsonExcption : public std::exception
-{
-public:
-	JsonExcption(const char* pMessage) : std::exception(pMessage)
-	{
-	}
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -638,7 +624,7 @@ public:
 
 	virtual JString ToString() const
 	{
-		return JString().Format("\"%s\"", (char*)GetString());
+		return JString().Format("\"%s\"", m_Value.GetString());
 	}
 
 	virtual JString GetType() const
@@ -751,7 +737,7 @@ public:
 			}
 			JString name = m_Names[i];
 			JString item = m_Items.find(name)->second->ToString();
-			result += JString().Format("\"%s\": %s", name, item);
+			result += JString().Format("\"%s\": %s", name.GetString(), item.GetString());
 		}
 		result += "}";
 		return result;
@@ -1084,11 +1070,11 @@ public:
 
 		if ('{' == *p)
 		{
-			return JsonParser().ParseObject(&p);
+			return JsonValue(JsonParser().ParseObject(&p));
 		}
 		else if ('[' == *p)
 		{
-			return JsonParser().ParseArray(&p);
+			return JsonValue(JsonParser().ParseArray(&p));
 		}
 		else
 		{
