@@ -32,4 +32,8 @@
 *.app
 /Source/*.opensdf
 /Source/*.sdf
+/Source/*.suo
+/Source/ipch
+/Source/Debug
+/Source/JsonLite/Debug
 /Source/JsonLite/*.user
