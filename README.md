@@ -2,6 +2,7 @@
 C++ JSON Library  
   
 Parse and build JSOH in C++, with no third-party library.  
+Suports Windows and Linux.  
   
 All modules are written in "JsonLite.h".  
 Please refer to "main.cpp", about how to use it.  
