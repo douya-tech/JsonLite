@@ -369,7 +369,7 @@ inline bool operator < (const JString& String1, const JString& String2)
 inline JString operator + (const JString& String1, const JString& String2)
 {
 	JString result(strlen(String1) + strlen(String2));
-	sprintf(result, "%s%s", String1, String2);
+	sprintf(result.GetString(), "%s%s", String1.GetString(), String2.GetString());
 	return result;
 }
 
@@ -636,7 +636,7 @@ public:
 
 	virtual JString ToString() const
 	{
-		return JString().Format("\"%s\"", (char*)GetString());
+		return JString().Format("\"%s\"", m_Value.GetString());
 	}
 
 	virtual JString GetType() const
@@ -1071,11 +1071,11 @@ public:
 
 		if ('{' == *p)
 		{
-			return JsonParser().ParseObject(&p);
+			return JsonValue(JsonParser().ParseObject(&p));
 		}
 		else if ('[' == *p)
 		{
-			return JsonParser().ParseArray(&p);
+			return JsonValue(JsonParser().ParseArray(&p));
 		}
 		else
 		{
