@@ -9,18 +9,16 @@
 #ifndef JSONLITE_H
 #define JSONLITE_H
 
-//#include <string.h>
-//#include <stdio.h>
-//#include <ctype.h>
-//#include <stdarg.h>
-
-//#ifndef PLATFORM
-//typedef unsigned char BYTE
-//typedef unsigned int  UINT
-//#endif
-
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <vector>
 #include <map>
+
+#ifndef WIN32
+typedef unsigned char BYTE;
+typedef unsigned int  UINT;
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 // JString
@@ -462,7 +460,7 @@ private:
 class JsonExcption : public std::exception
 {
 public:
-	JsonExcption(const char* pMessage) : std::exception(pMessage)
+	JsonExcption(const char *const &pMessage) : std::exception(pMessage)
 	{
 	}
 };

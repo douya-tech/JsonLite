@@ -1,4 +1,11 @@
-#include "stdafx.h"
+
+#ifdef WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#include <SDKDDKVer.h>
+#include <windows.h>
+#include <tchar.h>
+#endif
+
 #include "JsonLite.h"
 
 void Print(const char* pFormat, ...)
@@ -7,7 +14,9 @@ void Print(const char* pFormat, ...)
 	va_start(args, pFormat);
 
 	vprintf(pFormat, args);
+	puts("");
 
+#ifdef WIN32
 	int len = _vscprintf(pFormat, args);
 	char* buf = new char[len + 3];
 	{
@@ -21,6 +30,7 @@ void Print(const char* pFormat, ...)
 
 		delete[] buf;
 	}
+#endif
 }
 
 void TestStringifyO()
@@ -82,7 +92,7 @@ void Sample()
 		JString string1  = json.GetString(name);
 		int     integer1 = json.GetInteger(name);
 
-		////way 2
+		//way 2
 		JString string2  = json[name]->GetString();
 		int     integer2 = json[name]->GetInteger();
 
