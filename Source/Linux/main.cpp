@@ -4,6 +4,7 @@ void Print(const char* pFormat, ...)
 {
 	va_list args;
 	va_start(args, pFormat);
+	
 	vprintf(pFormat, args);
 
 #ifdef _WIN32
@@ -142,9 +143,11 @@ int main(int argc, char* argv[])
 {
 	Print("begin\n");
 
+	Print(JString("1212"));
+
 	//TestStringifyO();
 	//TestStringifyA();
-	TestParse();
+	//TestParse();
 
 	Print("end\n");
 	return 0;

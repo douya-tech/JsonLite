@@ -455,17 +455,6 @@ private:
 };
 
 //----------------------------------------------------------------------------------------------------------------------
-// JsonExcption
-
-class JsonExcption : public std::exception
-{
-public:
-	JsonExcption(const char *const &pMessage) : std::exception(pMessage)
-	{
-	}
-};
-
-//----------------------------------------------------------------------------------------------------------------------
 // IJsonValue
 
 class IJsonValue
@@ -745,7 +734,7 @@ public:
 		{
 			JString name = m_Names[i];
 			JString item = m_Items.find(name)->second->ToString();
-			result += JString().Format("\"%s\": %s", name, item);
+			result += JString().Format("\"%s\": %s", (char*)name, (char*)item);
 			if (++i < l)
 			{
 				result += ", ";
