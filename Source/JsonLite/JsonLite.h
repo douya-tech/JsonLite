@@ -1,6 +1,6 @@
 /**
 	
-	Copyright (C) 2021, douya.tech, all rights reserved.
+	Copyright(C) 2021, douya.tech, all rights reserved.
 
 	Author: 3h6a@163.com
 
@@ -262,17 +262,19 @@ public:
 		Copy();
 
 		va_list argptr;
-		va_start(argptr, Format);
 
+		va_start(argptr, Format);
 		UINT length = GetLength() + vsnprintf(NULL, 0, Format, argptr);
+		va_end(argptr);
+
 		if (length > Capacity())
 		{
 			*this = JString(m_pBuffer, length);
 		}
 
 		va_start(argptr, Format);
-
 		vsprintf(m_pBuffer + GetLength(), Format, argptr);
+		va_end(argptr);
 
 		return *this;
 	}
@@ -282,17 +284,19 @@ public:
 		Copy();
 
 		va_list argptr;
-		va_start(argptr, Format);
 
+		va_start(argptr, Format);
 		UINT length = vsnprintf(NULL, 0, Format, argptr);
+		va_end(argptr);
+
 		if (length > Capacity())
 		{
 			*this = JString(length);
 		}
 
 		va_start(argptr, Format);
-
 		vsprintf(m_pBuffer, Format, argptr);
+		va_end(argptr);
 
 		return *this;
 	}
@@ -329,7 +333,7 @@ public:
 
 	JString& Trim(const char* pString)
 	{
-		if (!IsEmpty())
+		if (!IsEmpty() && pString != NULL && *pString != 0)
 		{
 			Copy();
 
@@ -664,7 +668,7 @@ public:
 
 	virtual JString ToString() const
 	{
-		JString result("[");
+		JString result("[", 256);
 		for (UINT i = 0, l = m_Items.size(); i < l;)
 		{
 			result += m_Items[i]->ToString();
@@ -734,7 +738,7 @@ public:
 		{
 			JString name = m_Names[i];
 			JString item = m_Items.find(name)->second->ToString();
-			result += JString().Format("\"%s\": %s", (char*)name, (char*)item);
+			result += JString().Format("\"%s\": %s", name.GetString(), item.GetString());
 			if (++i < l)
 			{
 				result += ", ";
@@ -1336,11 +1340,11 @@ private:
 			// begin of the line
 			result += JString(' ', Indent * (Level + 1));
 
-			//string begin
+			//name begin
 			result += FormatString(Json.GetName(i));
 			result += ':';
 			result += ' ';
-			//string end
+			//name end
 
 			JString type = Json[i]->GetType();
 			if (type.Equals("string"))
